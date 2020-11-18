@@ -21,10 +21,10 @@ def view_post(pid: int, db: Session=Depends(get_db)):
 
 
 @router.post("/posts/{pid}", response_model=PostInDB)
-def create_post(pid: int, username: str, anonymous: bool, date_time: datetime, \
-    topic: str, post_header: str, post_body: str, db: Session=Depends(get_db)):
+def create_post(pid: int, username: str, anonymous: bool, topic: str, \
+    post_header: str, post_body: str, db: Session=Depends(get_db)):
     user_post = USER_POSTS(post_id=pid, username=username, anonymous=anonymous, \
-        date_time=date_time, topic=topic, post_header=post_header, post_body=post_body, comments=[])
+        date_time=datetime.now(), topic=topic, post_header=post_header, post_body=post_body, comments=[])
     db.add(user_post)
     db.commit()
     db.refresh(user_post)
