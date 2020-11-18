@@ -8,6 +8,8 @@ client = TestClient(app)
 
 
 class TestComments(TestCase):
+    """Test all comment routes."""
+
     def test_read_comment(self):
         pid = 1
         cid = 1
@@ -17,8 +19,7 @@ class TestComments(TestCase):
 
         comment = res.json()
 
-
-        assert comment["comment_id"]  == cid
+        assert comment["comment_id"] == cid
         assert comment["post_id"] == pid
         assert comment["content"] is not None
         assert comment["likes"] is not None
@@ -32,9 +33,7 @@ class TestComments(TestCase):
 
     def test_create_comment(self):
         pid = 1
-        res = client.post(f"/posts/{pid}/comments", json={
-            "content": "The Sky is Blue."
-        })
+        res = client.post(f"/posts/{pid}/comments", json={"content": "The Sky is Blue."})
 
         assert res.status_code == 200
 
@@ -46,21 +45,14 @@ class TestComments(TestCase):
 
     def test_update_comment(self):
         pid = 1
-        res_c = client.post(f"/posts/{pid}/comments", json={
-            "content": "The Sky is Blue."
-        })
+        res_c = client.post(f"/posts/{pid}/comments", json={"content": "The Sky is Blue."})
 
         res_c = res_c.json()
 
-        res = client.put(f"/posts/{pid}/comments/{res_c['comment_id']}", json={
-            "content": "'The Sky is blue'"
-        })
+        res = client.put(f"/posts/{pid}/comments/{res_c['comment_id']}", json={"content": "'The Sky is blue'"})
 
         assert res.status_code == 200
 
         u_comment = res.json()
         assert u_comment["comment_id"] == res_c["comment_id"]
         assert u_comment["content"] == "'The Sky is blue'"
-
-
-
