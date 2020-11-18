@@ -23,3 +23,13 @@ class CreateComment(BaseComment):
 class RequestCommentUpdate(BaseModel):
     content: Optional[str] = None
     likes: Optional[int] = None
+
+class PostInDB():
+    post_id: int
+    username: str
+    anonymous: bool
+    date_time: datetime
+    topic: str
+    post_header: str
+    post_body: str
+    comments: list
