@@ -4,9 +4,13 @@ from typing import Optional
 from fastapi import FastAPI
 import uvicorn
 
+from api.database.db_initialize import engine
+from api.model.table_models import Base
 from api.routes.comment import router as comment_router
 
 app = FastAPI()
+
+Base.metadata.create_all(bind=engine)
 
 
 @app.get("/")

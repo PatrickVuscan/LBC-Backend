@@ -2,11 +2,9 @@
 from sqlalchemy.orm import sessionmaker
 from api.database.db_initialize import engine
 
-from api.model.table_models import Comment as CommentModel, Base
+from api.model.table_models import Comment as CommentModel
 from api.posts.comment_db_interface import CommentDBInterface
 from api.posts.comment import Comment
-
-Base.metadata.create_all(bind=engine)
 
 
 class CommentDB(CommentDBInterface):
