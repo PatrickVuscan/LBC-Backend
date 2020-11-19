@@ -10,8 +10,8 @@ from api.schema.schemas import PostInDB
 router = APIRouter()
 
 def get_db():
-    Session = sessionmaker(engine)
-    orm_session = Session()
+    session = sessionmaker(engine)
+    orm_session = session()
     return orm_session
 
 
