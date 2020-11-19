@@ -1,7 +1,8 @@
 """Tests for Commentor object."""
 from unittest import TestCase
-from api.posts.commentor import Commentor, Comment
-from api.posts.comment_db import CommentDBInterface
+from api.posts.commentor import Commentor
+from api.posts.comment import Comment
+from api.posts.comment_db_interface import CommentDBInterface
 
 
 class MockCommentDB(CommentDBInterface):

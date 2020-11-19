@@ -1,4 +1,5 @@
 """Database models."""
+import datetime
 from sqlalchemy import Boolean, Column, Integer, String, Numeric, DateTime
 from api.database.db_initialize import Base
 
@@ -38,10 +39,10 @@ class Comment(Base):
 
     comment_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     post_id = Column(Integer)  # post_id of USER_POSTS that this comment is a part of
-    username = Column(String)  # username of USER that posted the comment
+    user_id = Column(Integer)  # user_id of USER that posted the comment
     content = Column(String)
     num_likes = Column(Integer, default=0)
-    date_time = Column(DateTime, nullable=False)  # Date Time posted
+    date_time = Column(DateTime, nullable=False, default=datetime.datetime.utcnow)  # Date Time posted
 
 
 class EmergencyContacts(Base):
