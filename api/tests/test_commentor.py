@@ -1,9 +1,10 @@
 """Tests for Commentor object."""
 from unittest import TestCase
-from api.posts.commentor import Commentor, CommentDB, Comment
+from api.posts.commentor import Commentor, Comment
+from api.posts.comment_db import CommentDBInterface
 
 
-class MockCommentDB(CommentDB):
+class MockCommentDB(CommentDBInterface):
     "Mock for testing comment database."
 
     def __init__(self):
