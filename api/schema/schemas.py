@@ -1,7 +1,6 @@
 """Data validation through pydantic."""
 
 from typing import Optional
-from datetime import datetime
 from pydantic import BaseModel
 
 
@@ -16,8 +15,7 @@ class CommentInDB(BaseComment):
 
     comment_id: int
     post_id: int
-    likes: int
-    created_at: datetime
+    user_id: int
 
     class Config:
         "Configuration for pydantic."
@@ -26,6 +24,8 @@ class CommentInDB(BaseComment):
 
 class CreateComment(BaseComment):
     """Data validation for when creating a new comment."""
+
+    user_id: int
 
 
 class RequestCommentUpdate(BaseModel):
