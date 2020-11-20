@@ -7,7 +7,7 @@
 # W0511 - TODO comments
 # W1202 - logging-format-interpolation - Behavior barring fstrings in logging https://github.com/PyCQA/pylint/issues/2395
 # missing-function-dosctring: docstyle handles
-# bad-continuation: disagrees with black formatter
+# bad-continuation: disagree with black formatter
 disable=E1130,E1136,R0801,W0511,W1202,missing-function-docstring,bad-continuation
 
 [MASTER]
@@ -24,12 +24,12 @@ ignore=migrations
 # (useful for modules/projects where namespaces are manipulated during runtime
 # and thus existing member attributes cannot be deduced by static analysis. It
 # supports qualified module names, as well as Unix pattern matching.
-ignored-modules=cv2,numpy, fastai, torch
+ignored-modules=fastapi, sqlalchemy
 
 # List of classes names for which member attributes should not be checked
 # (useful for classes with attributes dynamically set). This supports can work
 # with qualified names.
-ignored-classes=cv2,numpy,fastai, torch
+ignored-classes=fastapi, sqlalchemy
 
 [BASIC]
 
