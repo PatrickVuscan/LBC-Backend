@@ -1,7 +1,8 @@
+"""Database models."""
 from sqlalchemy import Boolean, Column, Integer, String, Numeric, DateTime
-from ..database.db_initialize import Base
+from api.database.db_initialize import Base
 
-class USERS(Base):
+class User(Base):
     __tablename__ = "USERS"
 
     username = Column(String, unique=True, primary_key=True)

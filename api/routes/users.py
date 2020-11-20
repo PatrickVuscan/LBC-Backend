@@ -6,7 +6,7 @@ from jose import JWTError, jwt
 from api.schema import authentication_schemas
 import authentication
 from datetime import datetime, timedelta
-from api.model.table_models import USERS
+from api.model.table_models import User
 from sqlalchemy.orm import sessionmaker, Session
 from api.database.db_initialize import engine
 from fastapi import APIRouter
@@ -65,11 +65,11 @@ async def login_for_access_token(user_login:authentication_schemas.UserLogin, db
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.get("/users/me/")
-async def read_users_me(current_user: USERS = Depends(get_current_user)):
+@router.get("/users/me")
+async def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
 
 
-@router.post("/users/")
+@router.post("/users")
 def create_user(user: authentication_schemas.UserCreate, db: Session=Depends(get_db)):
     return authentication.create_user(db, user)

@@ -1,11 +1,9 @@
 from unittest import TestCase
 import pytest
-# from fastapi.testrequests import Testrequests
+from fastapi.testclient import TestClient
 from app import app
-# requests = Testclients(app)
-import requests
 
-api_endpoint = 'http://127.0.0.1:5000'
+requests = TestClient(app)
 
 class TestAuthentications(TestCase):
 
@@ -14,21 +12,21 @@ class TestAuthentications(TestCase):
         request_body = {"username": "john117",
                         "password": "john117_pass"}
 
-        res = requests.post(api_endpoint + '/users', json=request_body)
+        res = requests.post('/users', json=request_body)
+
+        assert res.status_code == 200
+
         response_body = res.json()
 
         print('/users')
         print(response_body)
-
-        assert res.status_code == 200
-
 
     def test_login(self):
 
         request_body = {'username': 'john117',
                         'password': 'john117_pass'}
 
-        res = requests.post(api_endpoint + '/users/login', json=request_body)
+        res = requests.post('/users/login', json=request_body)
         response_body = res.json()
         print('users/login body')
         print(response_body)
@@ -44,7 +42,7 @@ class TestAuthentications(TestCase):
         """
         request_header = {'Authorization': f"{token_type} {access_token}"}
 
-        res = requests.get(api_endpoint + '/users/me', headers=request_header)
+        res = requests.get('/users/me', headers=request_header)
         response_body = res.json()
 
         assert response_body['username'] == 'john117'
