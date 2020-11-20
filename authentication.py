@@ -49,9 +49,15 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-def create_user(db, user: UserCreate):
+def create_user(db, user):
     user = USERS(username=user.username, password=get_password_hash(user.password))
-    db.add(user)
-    db.commit()
-    db.refresh(user)
-    return user
+
+    find_username = db.query(USERS).filter(USERS.username == user.username).all()
+    if len(find_username) == 0:
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+        return user
+    else:
+        return {"message": "Username already exists"}
+
