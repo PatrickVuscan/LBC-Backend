@@ -1,4 +1,5 @@
 """Database models."""
+
 import datetime
 from sqlalchemy import Boolean, Column, Integer, String, Numeric, DateTime
 from api.database.db_initialize import Base
