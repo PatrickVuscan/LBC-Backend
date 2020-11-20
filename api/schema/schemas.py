@@ -1,5 +1,6 @@
 """Data validation through pydantic."""
 
+from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel
 
@@ -33,8 +34,10 @@ class RequestCommentUpdate(BaseModel):
     content: Optional[str] = None
     likes: Optional[int] = None
 
-      
-class PostInDB():
+
+class PostInDB:
+    """Data validation for when creating a post."""
+
     post_id: int
     username: str
     anonymous: bool
