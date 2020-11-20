@@ -19,6 +19,7 @@ class TestComments(TestCase):
         cid = res.json()
 
         res_c = client.get(f"/comments/{cid}")
+        assert res_c.status_code == 200
         comment = res_c.json()
 
         assert comment["post_id"] == pid

@@ -20,6 +20,7 @@ class CommentInDB(BaseComment):
 
     class Config:
         "Configuration for pydantic."
+        orm_mode = True
 
 
 class CreateComment(BaseComment):
