@@ -22,7 +22,13 @@ class TestAuthentications(TestCase):
         print(response_body)
 
     def test_login(self):
+        # Create user first - Pytest runs in parallel so you cannot assume test order.
+        request_body = {"username": "john117",
+                        "password": "john117_pass"}
 
+        res = requests.post('/users', json=request_body)
+
+        # Main test starts here.
         request_body = {'username': 'john117',
                         'password': 'john117_pass'}
 
