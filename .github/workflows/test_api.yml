@@ -2,11 +2,13 @@ name: Python Continuous Integration for backend API.
 
 on:
   pull_request:
-    branches: [main]
+    branches: [master]
 
 jobs:
   test_pull_request:
     runs-on: ubuntu-20.04
+    env:
+      PYTHONPATH: .
     steps:
       - name: Checkout
         uses: actions/checkout@v2
