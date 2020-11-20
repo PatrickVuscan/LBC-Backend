@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from datetime import datetime, timedelta
 from typing import Optional
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from api.model.table_models import USERS
+from api.model.table_models import User
 from api.schema.authentication_schemas import *
 
 
@@ -26,7 +26,7 @@ def get_password_hash(password):
 
 
 def get_user(db, username: str):
-    user = db.query(USERS).filter(USERS.username==username).first()
+    user = db.query(User).filter(User.username==username).first()
     return user
 
 
@@ -50,14 +50,14 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     return encoded_jwt
 
 def create_user(db, user):
-    user = USERS(username=user.username, password=get_password_hash(user.password))
+    new_user = User(username=user.username, password=get_password_hash(user.password))
 
-    find_username = db.query(USERS).filter(USERS.username == user.username).all()
+    find_username = db.query(User).filter(User.username == new_user.username).all()
     if len(find_username) == 0:
-        db.add(user)
+        db.add(new_user)
         db.commit()
-        db.refresh(user)
-        return user
+        db.refresh(new_user)
+        return new_user
     else:
         return {"message": "Username already exists"}
 

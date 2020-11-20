@@ -4,6 +4,8 @@
 #
 #    pip-compile requirements-dev.in
 #
+--index-url https://pypi.tuna.tsinghua.edu.cn/simple
+
 alembic==1.4.3            # via -r requirements-dev.in
 appdirs==1.4.4            # via black, virtualenv
 astroid==2.4.2            # via pylint
@@ -56,7 +58,7 @@ pyyaml==5.3.1             # via -r requirements-dev.in, bandit, dparse, pre-comm
 regex==2020.10.23         # via black
 requests==2.24.0          # via safety
 safety==1.9.0             # via -r requirements-dev.in
-six==1.15.0               # via astroid, bandit, packaging, python-dateutil, virtualenv
+six==1.15.0               # via -c requirements.txt, astroid, bandit, packaging, python-dateutil, virtualenv
 smmap==3.0.4              # via gitdb
 snowballstemmer==2.0.0    # via pydocstyle
 sqlalchemy==1.3.20        # via -c requirements.txt, alembic
