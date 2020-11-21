@@ -24,7 +24,7 @@ class RequestCommentUpdate(BaseModel):
     content: Optional[str] = None
     likes: Optional[int] = None
 
-class PostInDB():
+class PostInDB(BaseModel):
     post_id: int
     username: str
     anonymous: bool

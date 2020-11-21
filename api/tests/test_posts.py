@@ -1,16 +1,17 @@
 from unittest import TestCase
 import pytest
 from fastapi.testclient import TestClient
-
 from app import app
 
-client = TestClient(app)
+requests = TestClient(app)
+
+# base_address = "http://127.0.0.1:5000"
 
 
 class TestPosts(TestCase):
     def test_read_post(self):
         pid = 1
-        res = client.get(f"/posts/{pid}")
+        res = requests.get(f"/posts/{pid}")
 
         assert res.status_code == 200
 
@@ -29,7 +30,7 @@ class TestPosts(TestCase):
 
     def test_create_post(self):
         pid = 1
-        res = client.post(f"/posts/{pid}", json={
+        res = requests.post(f"/posts/{pid}", json={
             "post_body": "Post body updated."
         })
 
@@ -43,13 +44,13 @@ class TestPosts(TestCase):
 
     def test_update_comment(self):
         pid = 1
-        res_c = client.patch(f"/posts/{pid}", json={
+        res_c = requests.patch(f"/posts/{pid}", json={
             "post_body": "Post body updated."
         })
 
         res_c = res_c.json()
 
-        res = client.get(f"/posts/{pid}/']")
+        res = requests.get(f"/posts/{pid}/']")
 
         assert res.status_code == 200
 
@@ -58,4 +59,8 @@ class TestPosts(TestCase):
         assert u_post["post_id"] == res_c["post_id"]
 
 
-
+if __name__ == '__main__':
+    p = TestPosts()
+    p.test_read_post()
+    p.test_create_post()
+    p.test_update_comment()
