@@ -36,14 +36,17 @@ class RequestCommentUpdate(BaseModel):
     likes: Optional[int] = None
 
 
-class PostInDB:
-    """Data validation for when creating a post."""
+class UpdatePost(BaseModel):
+    """ Data Validation for updating post """
 
-    post_id: int
-    username: str
+    topic: str
     anonymous: bool
-    date_time: datetime
     topic: str
     post_header: str
     post_body: str
-    comments: list
+
+
+class CreatePost(UpdatePost):
+    """ Data validation for creating post """
+
+    username: str
