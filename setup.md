@@ -22,6 +22,7 @@ If you add, remove, or need to update versions of some requirements, edit the `.
 
 ```sh
 pip-compile requirements.in && pip-compile requirements-dev.in
+pip-sync requirements.txt requirements-dev.txt
 ```
 
 ## 2. Install pre-commit hooks
