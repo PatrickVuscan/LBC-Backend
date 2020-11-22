@@ -2,9 +2,9 @@ from unittest import TestCase
 import pytest
 from fastapi.testclient import TestClient
 from app import app
-import requests
+## import requests
 
-# requests = TestClient(app)
+requests = TestClient(app)
 
 base_address = "http://127.0.0.1:5000"
 
