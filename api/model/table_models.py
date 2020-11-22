@@ -16,7 +16,6 @@ class User(Base):
     name = Column(String)
     age = Column(Integer)
     email = Column(String)
-    posts_liked = Column(String, default="")  # Pipe separated string of post_id
 
 
 class UserPosts(Base):
@@ -30,8 +29,6 @@ class UserPosts(Base):
     topic = Column(String(255))
     post_header = Column(String)
     post_body = Column(String)
-    # Pipe separated string ex: "1|2|40|90" where numbers = comment_id (from Table: COMMENTS)
-    comments = Column(String, default="")
 
 
 class Comment(Base):
@@ -42,7 +39,6 @@ class Comment(Base):
     post_id = Column(Integer)  # post_id of USER_POSTS that this comment is a part of
     user_id = Column(Integer)  # user_id of USER that posted the comment
     content = Column(String)
-    num_likes = Column(Integer, default=0)
     date_time = Column(DateTime, nullable=False, default=datetime.datetime.utcnow)  # Date Time posted
 
 
