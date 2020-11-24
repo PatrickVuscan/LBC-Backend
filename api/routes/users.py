@@ -7,24 +7,26 @@ from jose import jwt
 from sqlalchemy.orm import sessionmaker, Session
 
 
-from api.database.db_initialize import engine
+from api.database.db_initialize import ENGINE
 from api.schema import authentication_schemas
 from api.model.table_models import User
 import authentication
 
-router = APIRouter()
+ROUTER = APIRouter()
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+OAUTH2_SCHEME = OAuth2PasswordBearer(tokenUrl="token")
 
 
 def get_db():
-    session = sessionmaker(engine)
+    """Get the database."""
+    session = sessionmaker(ENGINE)
     orm_session = session()
     return orm_session
 
 
-async def get_current_user(dbb: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+async def get_current_user(dbb: Session = Depends(get_db), token: str = Depends(OAUTH2_SCHEME)):
+    """Get the current user."""
     payload = jwt.decode(token, authentication.SECRET_KEY, algorithms=[authentication.ALGORITHM])
     username: str = payload.get("sub")
     token_data = username
@@ -36,8 +38,9 @@ async def get_current_user(dbb: Session = Depends(get_db), token: str = Depends(
 # and just use request body to send username / pass (below)
 
 
-@router.post("/users/login", response_model=authentication_schemas.Token)
+@ROUTER.post("/users/login", response_model=authentication_schemas.Token)
 async def login_for_access_token(user_login: authentication_schemas.UserLogin, dbb: Session = Depends(get_db)):
+    """Generate an access token."""
     user = authentication.authenticate_user(dbb, user_login.username, user_login.password)
     if not user:
         raise HTTPException(
@@ -50,11 +53,13 @@ async def login_for_access_token(user_login: authentication_schemas.UserLogin, d
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.get("/users/me")
+@ROUTER.get("/users/me")
 async def read_users_me(current_user: User = Depends(get_current_user)):
+    """Get current user."""
     return current_user
 
 
-@router.post("/users")
+@ROUTER.post("/users")
 def create_user(user: authentication_schemas.UserCreate, dbb: Session = Depends(get_db)):
+    """Create a new user."""
     return authentication.create_user(dbb, user)

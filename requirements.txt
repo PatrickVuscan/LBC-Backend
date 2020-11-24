@@ -4,8 +4,6 @@
 #
 #    pip-compile requirements.in
 #
---index-url https://pypi.tuna.tsinghua.edu.cn/simple
-
 click==7.1.2              # via uvicorn
 ecdsa==0.14.1             # via python-jose
 fastapi==0.61.1           # via -r requirements.in

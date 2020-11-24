@@ -2,23 +2,31 @@
 from datetime import datetime
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import sessionmaker, Session
-from api.database.db_initialize import engine
+from api.database.db_initialize import ENGINE
 from api.model.table_models import UserPosts
 from api.schema.schemas import CreatePost, UpdatePost
 
 
-router = APIRouter()
+ROUTER = APIRouter()
 
 
 def get_db():
-    session = sessionmaker(engine)
+    """Get database"""
+    session = sessionmaker(ENGINE)
     orm_session = session()
     return orm_session
 
 
-@router.get("/posts/{pid}")
-def get_single_post(pid: int, dbb: Session = Depends(get_db)):
+@ROUTER.get("/posts")
+def get_all_posts(dbb: Session = Depends(get_db)):
+    """Get all posts"""
+    posts = dbb.query(UserPosts).all()
+    return posts
 
+
+@ROUTER.get("/posts/{pid}")
+def get_single_post(pid: int, dbb: Session = Depends(get_db)):
+    """Get a single post"""
     post = dbb.query(UserPosts).filter(UserPosts.post_id == pid).first()
 
     response_body = {
@@ -35,9 +43,9 @@ def get_single_post(pid: int, dbb: Session = Depends(get_db)):
     return response_body
 
 
-@router.post("/posts")
+@ROUTER.post("/posts")
 def create_post(request_body: CreatePost, dbb: Session = Depends(get_db)):
-
+    """Create a post"""
     post_data = {
         "username": request_body.username,
         "topic": request_body.topic,
@@ -54,9 +62,9 @@ def create_post(request_body: CreatePost, dbb: Session = Depends(get_db)):
     return post_data
 
 
-@router.patch("/posts/{pid}")
+@ROUTER.patch("/posts/{pid}")
 def update_post(pid: int, request_body: UpdatePost, dbb: Session = Depends(get_db)):
-
+    """Update a post"""
     user_post = dbb.query(UserPosts).filter(UserPosts.post_id == pid).first()
 
     user_post.anonymous = request_body.anonymous

@@ -1,3 +1,4 @@
+"""Tests for posts."""
 from unittest import TestCase
 from fastapi.testclient import TestClient
 from app import app
@@ -6,6 +7,16 @@ requests = TestClient(app)
 
 
 class TestPosts(TestCase):
+    """Test all post routes."""
+
+    def test_get_all_posts(self):
+        res = requests.get("/posts")
+
+        assert res.status_code == 200
+        posts = res.json()
+
+        assert len(posts) == 7
+
     def test_get_single_post(self):
 
         pid = 1
@@ -88,6 +99,7 @@ class TestPosts(TestCase):
 
 if __name__ == "__main__":
     p = TestPosts()
+    # p.test_get_all_posts()
     p.test_create_post()
     p.test_get_single_post()
     p.test_update_post()

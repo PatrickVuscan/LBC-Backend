@@ -1,6 +1,5 @@
 """Data validation through pydantic."""
 
-from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel
 
@@ -41,7 +40,6 @@ class UpdatePost(BaseModel):
 
     topic: str
     anonymous: bool
-    topic: str
     post_header: str
     post_body: str
 
