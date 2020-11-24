@@ -1,4 +1,5 @@
 """Tests CommentDB object."""
+# pylint: disable-all
 from unittest import TestCase
 import pytest
 from api.database.comment_db import CommentDB

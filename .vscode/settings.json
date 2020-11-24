@@ -1,0 +1,4 @@
+{
+    "python.pythonPath": "/Users/snam/opt/miniconda3/envs/fast-api/bin/python",
+    "python.linting.pylintEnabled": true
+}

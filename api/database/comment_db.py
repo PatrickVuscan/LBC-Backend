@@ -1,6 +1,6 @@
 """Module contains database logic for comment model."""
 from sqlalchemy.orm import sessionmaker
-from api.database.db_initialize import engine
+from api.database.db_initialize import ENGINE
 
 from api.model.table_models import Comment as CommentModel
 from api.posts.comment_db_interface import CommentDBInterface
@@ -11,7 +11,7 @@ class CommentDB(CommentDBInterface):
     """Implementation for comment model."""
 
     def __init__(self):
-        self.orm = sessionmaker(engine)()
+        self.orm = sessionmaker(ENGINE)()
 
     def post_comment(self, post_id: int, user_id: int, content: str) -> int:
         new_comment = CommentModel(post_id=post_id, user_id=user_id, content=content)
