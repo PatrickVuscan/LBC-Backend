@@ -37,7 +37,6 @@ def get_single_post(pid: int, dbb: Session = Depends(get_db)):
         "topic": post.topic,
         "post_header": post.post_header,
         "post_body": post.post_body,
-        "comments": post.comments,
     }
 
     return response_body

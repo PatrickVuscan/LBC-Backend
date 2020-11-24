@@ -32,7 +32,6 @@ class TestPosts(TestCase):
         assert post["topic"] == "Test_Post_Topic"
         assert post["post_header"] == "Test_Post_Header"
         assert post["post_body"] == "The Sky is Blue."
-        assert post["comments"] == ""
 
         print("Test Get Single Post Passed")
 
@@ -99,7 +98,7 @@ class TestPosts(TestCase):
 
 if __name__ == "__main__":
     p = TestPosts()
-    # p.test_get_all_posts()
+    p.test_get_all_posts()
     p.test_create_post()
     p.test_get_single_post()
     p.test_update_post()
