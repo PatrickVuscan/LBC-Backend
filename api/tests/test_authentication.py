@@ -1,12 +1,15 @@
+"""Test for authentication"""
+# pylint: disable-all
 from unittest import TestCase
-import pytest
 from fastapi.testclient import TestClient
-from app import app
+from api.app import app
 
 requests = TestClient(app)
 
 
 class TestAuthentications(TestCase):
+    """Tests for authentication routes"""
+
     def test_sign_up(self):
 
         request_body = {"username": "john117", "password": "john117_pass"}

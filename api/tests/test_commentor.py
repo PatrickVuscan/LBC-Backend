@@ -1,4 +1,5 @@
 """Tests for Commentor object."""
+# pylint: disable-all
 from unittest import TestCase
 from api.posts.commentor import Commentor
 from api.posts.comment import Comment

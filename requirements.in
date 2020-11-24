@@ -3,3 +3,4 @@ uvicorn
 SQLAlchemy
 python-jose
 passlib
+bcrypt

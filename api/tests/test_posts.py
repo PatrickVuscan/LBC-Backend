@@ -1,7 +1,8 @@
 """Tests for posts."""
+# pylint: disable-all
 from unittest import TestCase
 from fastapi.testclient import TestClient
-from app import app
+from api.app import app
 
 requests = TestClient(app)
 
@@ -10,12 +11,34 @@ class TestPosts(TestCase):
     """Test all post routes."""
 
     def test_get_all_posts(self):
+        request_body1 = {
+            "username": "Test1",
+            "anonymous": False,
+            "topic": "Test_Post_Topic",
+            "post_header": "Test_Post_Header",
+            "post_body": "The Sky is Blue.",
+        }
+
+        request_body2 = {
+            "username": "Test2",
+            "anonymous": False,
+            "topic": "Test_Post_Topic",
+            "post_header": "Test_Post_Header",
+            "post_body": "The Sky is Blue.",
+        }
+
+        res1 = requests.post("/posts", json=request_body1)
+        res2 = requests.post("/posts", json=request_body2)
+        res1 = res1.json()
+        res2 = res2.json()
+
         res = requests.get("/posts")
 
         assert res.status_code == 200
         posts = res.json()
 
-        assert len(posts) == 7
+        assert posts[-1]["username"] == res2["username"]
+        assert posts[-2]["username"] == res1["username"]
 
     def test_get_single_post(self):
 

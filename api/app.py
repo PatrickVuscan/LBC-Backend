@@ -1,17 +1,16 @@
 """Main app."""
-from typing import Optional
-
 from fastapi import FastAPI
 import uvicorn
 
-from api.database.db_initialize import engine
+from api.database.db_initialize import ENGINE
 from api.model.table_models import Base
-from api.routes.users import router as user_router
-from api.routes.comment import router as comment_router
-from api.routes.post import router as post_router
+from api.routes.users import ROUTER as user_router
+from api.routes.comment import ROUTER as comment_router
+from api.routes.post import ROUTER as post_router
+
 app = FastAPI()
 
-Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=ENGINE)
 
 
 @app.get("/")

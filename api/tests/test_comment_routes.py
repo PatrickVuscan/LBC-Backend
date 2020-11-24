@@ -1,8 +1,9 @@
+"""Tests for Comments"""
+# pylint: disable-all
 from unittest import TestCase
-import pytest
 from fastapi.testclient import TestClient
 
-from app import app
+from api.app import app
 
 client = TestClient(app)
 
