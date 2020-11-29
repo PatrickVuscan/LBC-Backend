@@ -49,6 +49,7 @@ def create_post(request_body: CreatePost, dbb: Session = Depends(get_db)):
         "username": request_body.username,
         "topic": request_body.topic,
         "date_time": datetime.now(),
+        "anonymous": request_body.anonymous,
         "post_header": request_body.post_header,
         "post_body": request_body.post_body,
     }
