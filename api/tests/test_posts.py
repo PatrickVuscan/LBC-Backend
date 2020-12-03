@@ -40,6 +40,8 @@ class TestPosts(TestCase):
         assert posts[-1]["username"] == res2["username"]
         assert posts[-2]["username"] == res1["username"]
 
+        print("Test Get All Posts Passed")
+
     def test_get_single_post(self):
 
         pid = 1
@@ -57,6 +59,17 @@ class TestPosts(TestCase):
         assert post["post_body"] == "The Sky is Blue."
 
         print("Test Get Single Post Passed")
+
+    def test_get_10_posts(self):
+
+        res = requests.get(f"/posts/recent/11")
+
+        assert res.status_code == 200
+        post = res.json()
+
+        assert len(post) == 10
+
+        print("Test Get 10 Posts Passed")
 
     def test_create_post(self):
 
@@ -125,3 +138,4 @@ if __name__ == "__main__":
     p.test_create_post()
     p.test_get_single_post()
     p.test_update_post()
+    p.test_get_10_posts()

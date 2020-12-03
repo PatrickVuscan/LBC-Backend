@@ -24,6 +24,13 @@ def get_all_posts(dbb: Session = Depends(get_db)):
     return posts
 
 
+@ROUTER.get("/posts/recent/{cursor}")
+def get_ten_recent_posts(cursor: int, dbb: Session = Depends(get_db)):
+    """Get the ten most recent posts"""
+    posts = dbb.query(UserPosts).filter(UserPosts.post_id < cursor).limit(10).all()
+    return posts
+
+
 @ROUTER.get("/posts/{pid}")
 def get_single_post(pid: int, dbb: Session = Depends(get_db)):
     """Get a single post"""
@@ -53,8 +60,6 @@ def create_post(request_body: CreatePost, dbb: Session = Depends(get_db)):
         "post_header": request_body.post_header,
         "post_body": request_body.post_body,
     }
-
-    print(post_data)
 
     dbb.add(UserPosts(**post_data))
     dbb.commit()
