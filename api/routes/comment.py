@@ -4,8 +4,8 @@ from fastapi import APIRouter
 from fastapi.params import Depends
 
 from api.schema.schemas import CommentInDB, CreateComment
-from api.posts.commentor import Commentor
-from api.posts.comment_db_interface import CommentDBInterface
+from api.comment.commentor import Commentor
+from api.comment.comment_db_interface import CommentDBInterface
 from api.database.comment_db import CommentDB
 
 

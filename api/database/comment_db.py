@@ -3,8 +3,8 @@ from sqlalchemy.orm import sessionmaker
 from api.database.db_initialize import ENGINE
 
 from api.model.table_models import Comment as CommentModel
-from api.posts.comment_db_interface import CommentDBInterface
-from api.posts.comment import Comment
+from api.comment.comment_db_interface import CommentDBInterface
+from api.comment.comment import Comment
 
 
 class CommentDB(CommentDBInterface):

@@ -1,5 +1,5 @@
 """Business logic for commenting."""
-from api.posts.comment_db_interface import CommentDBInterface
+from api.comment.comment_db_interface import CommentDBInterface
 
 
 class Commentor:

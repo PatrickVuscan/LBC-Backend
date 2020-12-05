@@ -1,5 +1,5 @@
 """Database logic for comment model."""
-from api.posts.comment import Comment
+from api.comment.comment import Comment
 
 
 class CommentDBInterface:
