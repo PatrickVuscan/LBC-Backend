@@ -53,8 +53,6 @@ def create_post(request_body: CreatePost, dbb: Session = Depends(get_db)):
         "post_body": request_body.post_body,
     }
 
-    print(post_data)
-
     dbb.add(UserPosts(**post_data))
     dbb.commit()
 
