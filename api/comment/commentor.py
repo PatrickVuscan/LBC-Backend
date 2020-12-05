@@ -1,5 +1,4 @@
 """Business logic for commenting."""
-from typing import Optional
 from api.comment.comment_db_interface import CommentDBInterface
 
 
@@ -17,6 +16,6 @@ class Commentor:
         """View a comment"""
         return self.comment_db.get_comment(comment_id)
 
-    def view_n_comments(self, post_id: int, n: int, offset: Optional[int] = 0):
+    def view_n_comments(self, post_id: int, n: int, offset=0):
         """Return `n` Comments for Post with id `post_id` from offset `o`."""
         return self.comment_db.get_n_comments(post_id=post_id, n=n, offset=offset)

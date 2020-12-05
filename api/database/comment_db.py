@@ -1,5 +1,4 @@
 """Module contains database logic for comment model."""
-from typing import Optional
 
 from sqlalchemy.orm import sessionmaker
 from api.database.db_initialize import ENGINE
@@ -31,5 +30,5 @@ class CommentDB(CommentDBInterface):
             raise ValueError(f"No such comment with id {comment_id} in db.")
         return Comment(db_comment.comment_id, db_comment.post_id, db_comment.user_id, db_comment.content)
 
-    def get_n_comments(self, post_id: int, n: int, offset: Optional[int] = 0):
+    def get_n_comments(self, post_id: int, n: int, offset=0):
         return super().get_n_comments(post_id, n, offset=offset)

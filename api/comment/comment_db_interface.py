@@ -1,5 +1,4 @@
 """Database logic for comment model."""
-from typing import Optional
 from api.comment.comment import Comment
 
 
@@ -14,5 +13,5 @@ class CommentDBInterface:
         """Post a comment"""
         raise NotImplementedError
 
-    def get_n_comments(self, post_id: int, n: int, offset: Optional[int] = 0):
+    def get_n_comments(self, post_id: int, n: int, offset=0):
         raise NotImplementedError
