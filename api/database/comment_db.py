@@ -31,4 +31,20 @@ class CommentDB(CommentDBInterface):
         return Comment(db_comment.comment_id, db_comment.post_id, db_comment.user_id, db_comment.content)
 
     def get_n_comments(self, post_id: int, n: int, offset=0):
-        return super().get_n_comments(post_id, n, offset=offset)
+        db_comments = (
+            self.orm.query(CommentModel)
+            .filter(CommentModel.post_id == post_id)
+            .order_by(CommentModel.comment_id.desc())
+            .offset(offset)
+            .limit(n)
+            .all()
+        )
+
+        if len(db_comments) == 0:
+            raise ValueError(f"No comments for post with id {post_id} in db.")
+
+        comments = []
+        for db_comment in db_comments:
+            comments.append(Comment(db_comment.comment_id, db_comment.post_id, db_comment.user_id, db_comment.content))
+
+        return comments
