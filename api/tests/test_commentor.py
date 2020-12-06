@@ -5,8 +5,25 @@ from unittest import TestCase
 from api.comment.commentor import Commentor
 from api.comment.comment import Comment
 from api.comment.comment_db_interface import CommentDBInterface
+from api.comment.comment_validator_interface import CommentValidatorInterface
 
 MSG = "The Sky Is Blue"
+
+
+class MockCommentValidator(CommentValidatorInterface):
+    """Mock for testing comment database."""
+
+    def validate_user(self, user_id: int):
+        """Placeholder validation."""
+        pass
+
+    def validate_post(self, post_id: int):
+        """Placeholder validation."""
+        pass
+
+    def validate_comment(self, comment_id: int):
+        """Placeholder validation."""
+        pass
 
 
 class MockCommentDB(CommentDBInterface):
@@ -31,13 +48,17 @@ class MockCommentDB(CommentDBInterface):
             comments.append(self.get_comment(self.next_cid - (i + 1 + offset)))
         return comments
 
+    def update_comment(self, comment_id: int, content: str):
+        return super().update_comment(comment_id, content)
+
 
 class TestCommentor(TestCase):
     "Test all functionality for commentor object in isolation."
 
     def test_create_comment(self):
         dbb = MockCommentDB()
-        commentor = Commentor(dbb)
+        validator = MockCommentValidator()
+        commentor = Commentor(dbb, validator)
 
         cid = commentor.create_comment(post_id=1, user_id=1, content=MSG)
         assert cid == 0
@@ -49,7 +70,8 @@ class TestCommentor(TestCase):
 
     def test_view_n_comments(self):
         dbb = MockCommentDB()
-        commentor = Commentor(dbb)
+        validator = MockCommentValidator()
+        commentor = Commentor(dbb, validator)
 
         cid1 = commentor.create_comment(post_id=1, user_id=1, content=MSG)
         cid2 = commentor.create_comment(post_id=1, user_id=1, content=MSG)
@@ -64,7 +86,8 @@ class TestCommentor(TestCase):
 
     def test_view_n_comments_starting_at_pos_c(self):
         dbb = MockCommentDB()
-        commentor = Commentor(dbb)
+        validator = MockCommentValidator()
+        commentor = Commentor(dbb, validator)
 
         cid1 = commentor.create_comment(post_id=1, user_id=1, content=MSG)
         cid2 = commentor.create_comment(post_id=1, user_id=1, content=MSG)
@@ -79,3 +102,17 @@ class TestCommentor(TestCase):
         assert comments[0].comment_id == cid3
         assert comments[1].comment_id == cid2
         assert comments[2].comment_id == cid1
+
+    def test_update_comment(self):
+        dbb = MockCommentDB()
+        validator = MockCommentValidator()
+        commentor = Commentor(dbb, validator)
+
+        NEW_MSG = "NEW CONTENT"
+        cid = commentor.create_comment(post_id=1, user_id=1, content=MSG)
+
+        commentor.update_comment(comment_id=cid, content=NEW_MSG)
+
+        comment = commentor.view_comment(cid)
+
+        assert comment.content == NEW_MSG

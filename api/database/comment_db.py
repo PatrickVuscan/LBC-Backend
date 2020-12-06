@@ -48,3 +48,6 @@ class CommentDB(CommentDBInterface):
             comments.append(Comment(db_comment.comment_id, db_comment.post_id, db_comment.user_id, db_comment.content))
 
         return comments
+
+    def update_comment(self, comment_id: int, content: str):
+        """TODO: To be implemented."""
