@@ -25,6 +25,7 @@ class UserBase(BaseModel):
 class UserInDB(UserBase):
     """Access Token User Hashed Password"""
 
+    user_id: int
     hashed_password: str
 
 

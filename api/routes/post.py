@@ -53,12 +53,12 @@ def create_post(request_body: CreatePost, dbb: Session = Depends(get_db)):
         "post_body": request_body.post_body,
     }
 
-    print(post_data)
-
-    dbb.add(UserPosts(**post_data))
+    new_post = UserPosts(**post_data)
+    dbb.add(new_post)
     dbb.commit()
+    dbb.refresh(new_post)
 
-    return post_data
+    return new_post.post_id
 
 
 @ROUTER.patch("/posts/{pid}")
