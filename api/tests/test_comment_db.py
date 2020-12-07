@@ -103,3 +103,15 @@ class TestCommentDB(TestCase):
         comment = self.dbb.get_comment(cid1)
 
         assert comment.content == NEW_CONTENT
+
+    def test_delete_comment(self):
+        post_id = 1
+        user_id = 1
+        content1 = "Hello 1"
+
+        cid1 = self.dbb.post_comment(post_id, user_id, content1)
+
+        self.dbb.delete_comment(cid1)
+
+        with pytest.raises(ValueError):
+            self.dbb.get_comment(cid1)

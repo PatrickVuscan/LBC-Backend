@@ -54,3 +54,8 @@ class CommentDB(CommentDBInterface):
         db_comment.content = content
 
         self.orm.commit()
+
+    def delete_comment(self, comment_id: int):
+        db_comment = self.orm.query(CommentModel).filter(CommentModel.comment_id == comment_id).first()
+        self.orm.delete(db_comment)
+        self.orm.commit()

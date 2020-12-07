@@ -56,6 +56,9 @@ class MockCommentDB(CommentDBInterface):
     def update_comment(self, comment_id: int, content: str):
         self.comments[comment_id].content = content
 
+    def delete_comment(self, comment_id: int):
+        return self.comments.pop(comment_id, None)
+
 
 class TestCommentor(TestCase):
     "Test all functionality for commentor object in isolation."
@@ -122,3 +125,15 @@ class TestCommentor(TestCase):
         comment = commentor.view_comment(cid)
 
         assert comment.content == NEW_MSG
+
+    def test_delete_comment(self):
+        uid = 1
+        dbb = MockCommentDB()
+        validator = MockCommentValidator()
+        commentor = Commentor(dbb, validator)
+
+        cid = commentor.create_comment(post_id=1, user_id=uid, content=MSG)
+
+        comment = commentor.delete_comment(user_id=uid, comment_id=cid)
+
+        assert comment.comment_id == cid

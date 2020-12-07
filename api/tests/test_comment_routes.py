@@ -91,3 +91,16 @@ class TestComments(TestCase):
         res_c = res_c.json()
 
         assert res_c["content"] == NEW_CONTENT
+
+    def test_delete_comment(self):
+        pid = self.pid
+        uid = self.uid
+        res = client.post(f"/posts/{pid}/comments", json={"content": "The Sky is Blue.", "user_id": uid})
+        cid = res.json()
+
+        res = client.delete(f"/comments/{cid}", json={"user_id": uid})
+
+        assert res.status_code == 200
+
+        with pytest.raises(ValueError):
+            client.get(f"/comments/{cid}")
