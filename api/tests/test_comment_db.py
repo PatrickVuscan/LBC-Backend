@@ -89,3 +89,17 @@ class TestCommentDB(TestCase):
         assert comments[0].comment_id == cid3
         assert comments[1].comment_id == cid2
         assert comments[2].comment_id == cid1
+
+    def test_update_comment(self):
+        NEW_CONTENT = "NEW CONTENT"
+        post_id = 1
+        user_id = 1
+        content1 = "Hello 1"
+
+        cid1 = self.dbb.post_comment(post_id, user_id, content1)
+
+        self.dbb.update_comment(cid1, NEW_CONTENT)
+
+        comment = self.dbb.get_comment(cid1)
+
+        assert comment.content == NEW_CONTENT

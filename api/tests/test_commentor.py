@@ -54,7 +54,7 @@ class MockCommentDB(CommentDBInterface):
         return comments
 
     def update_comment(self, comment_id: int, content: str):
-        return super().update_comment(comment_id, content)
+        self.comments[comment_id].content = content
 
 
 class TestCommentor(TestCase):
@@ -108,16 +108,16 @@ class TestCommentor(TestCase):
         assert comments[1].comment_id == cid2
         assert comments[2].comment_id == cid1
 
-    @pytest.mark.skip(reason="To be implemented!")
     def test_update_comment(self):
+        uid = 1
         dbb = MockCommentDB()
         validator = MockCommentValidator()
         commentor = Commentor(dbb, validator)
 
         NEW_MSG = "NEW CONTENT"
-        cid = commentor.create_comment(post_id=1, user_id=1, content=MSG)
+        cid = commentor.create_comment(post_id=1, user_id=uid, content=MSG)
 
-        commentor.update_comment(comment_id=cid, content=NEW_MSG)
+        commentor.update_comment(user_id=uid, comment_id=cid, content=NEW_MSG)
 
         comment = commentor.view_comment(cid)
 

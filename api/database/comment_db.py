@@ -50,4 +50,7 @@ class CommentDB(CommentDBInterface):
         return comments
 
     def update_comment(self, comment_id: int, content: str):
-        """TODO: To be implemented."""
+        db_comment = self.orm.query(CommentModel).filter(CommentModel.comment_id == comment_id).first()
+        db_comment.content = content
+
+        self.orm.commit()

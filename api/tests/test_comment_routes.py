@@ -75,3 +75,19 @@ class TestComments(TestCase):
         assert comments[0]["comment_id"] == cid3
         assert comments[1]["comment_id"] == cid2
         assert comments[2]["comment_id"] == cid1
+
+    def test_update_comment(self):
+        NEW_CONTENT = "NEW CONTENT"
+        pid = self.pid
+        uid = self.uid
+        res = client.post(f"/posts/{pid}/comments", json={"content": "The Sky is Blue.", "user_id": uid})
+        cid = res.json()
+
+        res = client.put(f"/comments/{cid}", json={"user_id": uid, "content": NEW_CONTENT})
+
+        assert res.status_code == 200
+
+        res_c = client.get(f"/comments/{cid}")
+        res_c = res_c.json()
+
+        assert res_c["content"] == NEW_CONTENT
