@@ -39,9 +39,35 @@ def init_user(request):
 
 
 @pytest.fixture(scope="class")
+def init_user2(request):
+    request_body = {"username": "JohnDoe", "password": "doe_pass"}
+
+    res = client.post("/users", json=request_body)
+    res = res.json()
+
+    if res == {"message": "Username already exists"}:
+
+        res = client.post("/users/login", json=request_body)
+        res_body = res.json()
+        req_header = {"Authorization": f"{res_body['token_type']} {res_body['access_token']}"}
+        res = client.get("/users/me", headers=req_header)
+        res = res.json()
+
+    request.cls.uid2 = res["user_id"]
+
+
+@pytest.fixture(scope="class")
 def init_comment(request):
     pid = request.cls.pid
     uid = request.cls.uid
     res = client.post(f"/posts/{pid}/comments", json={"content": "The Sky is Blue.", "user_id": uid})
-
     request.cls.cid = res.json()
+
+
+@pytest.fixture(scope="class")
+def init_comment2(request):
+    pid = request.cls.pid
+    uid = request.cls.uid2
+    res = client.post(f"/posts/{pid}/comments", json={"content": "The Sky is Blue.", "user_id": uid})
+
+    request.cls.cid2 = res.json()

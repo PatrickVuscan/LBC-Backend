@@ -4,10 +4,10 @@ from unittest import TestCase
 import pytest
 
 from api.database.comment_validator_db import CommentValidatorDB
-from api.tests.utils.utils import init_user, init_post, init_comment
+from api.tests.utils.utils import init_user, init_post, init_comment, init_comment2, init_user2
 
 
-@pytest.mark.usefixtures("init_user", "init_post", "init_comment")
+@pytest.mark.usefixtures("init_user", "init_user2", "init_post", "init_comment", "init_comment2")
 class TestCommentValidatorDB(TestCase):
     """Test all functionality for comment validator object."""
 
@@ -32,3 +32,12 @@ class TestCommentValidatorDB(TestCase):
 
         with pytest.raises(ValueError):
             self.validator.validate_comment(-1)
+
+    def test_validate_user_authorization(self):
+        self.validator.validate_user_authorization(self.uid, self.cid)
+
+        with pytest.raises(PermissionError):
+            self.validator.validate_user_authorization(self.uid2, self.cid)
+
+        with pytest.raises(PermissionError):
+            self.validator.validate_user_authorization(self.uid, self.cid2)

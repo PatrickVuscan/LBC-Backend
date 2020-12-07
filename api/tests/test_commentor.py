@@ -26,6 +26,10 @@ class MockCommentValidator(CommentValidatorInterface):
         """Placeholder validation."""
         pass
 
+    def validate_user_authorization(self, user_id: int, comment_id: int):
+        """Placeholder validation."""
+        pass
+
 
 class MockCommentDB(CommentDBInterface):
     "Mock for testing comment database."
