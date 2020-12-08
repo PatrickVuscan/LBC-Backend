@@ -1,6 +1,5 @@
 """Data validation through pydantic."""
 
-from typing import Optional
 from pydantic import BaseModel
 
 
@@ -31,8 +30,14 @@ class CreateComment(BaseComment):
 class RequestCommentUpdate(BaseModel):
     """Request validation for updating comments."""
 
-    content: Optional[str] = None
-    likes: Optional[int] = None
+    user_id: int
+    content: str
+
+
+class RequestDeleteComment(BaseModel):
+    """Request body validation for deleting comments."""
+
+    user_id: int
 
 
 class UpdatePost(BaseModel):

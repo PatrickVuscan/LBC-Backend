@@ -6,38 +6,9 @@ import pytest
 
 from api.app import app
 
+from api.tests.utils.utils import init_post, init_user
+
 client = TestClient(app)
-
-
-@pytest.fixture(scope="class")
-def init_post(request):
-    request_body = {
-        "username": "Test_Post_Username",
-        "anonymous": False,
-        "topic": "Test_Post_Topic",
-        "post_header": "Test_Post_Header",
-        "post_body": "The Sky is Blue.",
-    }
-    res = client.post("/posts", json=request_body)
-    request.cls.pid = res.json()
-
-
-@pytest.fixture(scope="class")
-def init_user(request):
-    request_body = {"username": "george", "password": "george_pass"}
-
-    res = client.post("/users", json=request_body)
-    res = res.json()
-
-    if res == {"message": "Username already exists"}:
-
-        res = client.post("/users/login", json=request_body)
-        res_body = res.json()
-        req_header = {"Authorization": f"{res_body['token_type']} {res_body['access_token']}"}
-        res = client.get("/users/me", headers=req_header)
-        res = res.json()
-
-    request.cls.uid = res["user_id"]
 
 
 @pytest.mark.usefixtures("init_post", "init_user")
@@ -104,3 +75,32 @@ class TestComments(TestCase):
         assert comments[0]["comment_id"] == cid3
         assert comments[1]["comment_id"] == cid2
         assert comments[2]["comment_id"] == cid1
+
+    def test_update_comment(self):
+        NEW_CONTENT = "NEW CONTENT"
+        pid = self.pid
+        uid = self.uid
+        res = client.post(f"/posts/{pid}/comments", json={"content": "The Sky is Blue.", "user_id": uid})
+        cid = res.json()
+
+        res = client.put(f"/comments/{cid}", json={"user_id": uid, "content": NEW_CONTENT})
+
+        assert res.status_code == 200
+
+        res_c = client.get(f"/comments/{cid}")
+        res_c = res_c.json()
+
+        assert res_c["content"] == NEW_CONTENT
+
+    def test_delete_comment(self):
+        pid = self.pid
+        uid = self.uid
+        res = client.post(f"/posts/{pid}/comments", json={"content": "The Sky is Blue.", "user_id": uid})
+        cid = res.json()
+
+        res = client.delete(f"/comments/{cid}", json={"user_id": uid})
+
+        assert res.status_code == 200
+
+        with pytest.raises(ValueError):
+            client.get(f"/comments/{cid}")

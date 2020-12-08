@@ -26,6 +26,10 @@ class MockCommentValidator(CommentValidatorInterface):
         """Placeholder validation."""
         pass
 
+    def validate_user_authorization(self, user_id: int, comment_id: int):
+        """Placeholder validation."""
+        pass
+
 
 class MockCommentDB(CommentDBInterface):
     "Mock for testing comment database."
@@ -50,7 +54,10 @@ class MockCommentDB(CommentDBInterface):
         return comments
 
     def update_comment(self, comment_id: int, content: str):
-        return super().update_comment(comment_id, content)
+        self.comments[comment_id].content = content
+
+    def delete_comment(self, comment_id: int):
+        return self.comments.pop(comment_id, None)
 
 
 class TestCommentor(TestCase):
@@ -104,17 +111,29 @@ class TestCommentor(TestCase):
         assert comments[1].comment_id == cid2
         assert comments[2].comment_id == cid1
 
-    @pytest.mark.skip(reason="To be implemented!")
     def test_update_comment(self):
+        uid = 1
         dbb = MockCommentDB()
         validator = MockCommentValidator()
         commentor = Commentor(dbb, validator)
 
         NEW_MSG = "NEW CONTENT"
-        cid = commentor.create_comment(post_id=1, user_id=1, content=MSG)
+        cid = commentor.create_comment(post_id=1, user_id=uid, content=MSG)
 
-        commentor.update_comment(comment_id=cid, content=NEW_MSG)
+        commentor.update_comment(user_id=uid, comment_id=cid, content=NEW_MSG)
 
         comment = commentor.view_comment(cid)
 
         assert comment.content == NEW_MSG
+
+    def test_delete_comment(self):
+        uid = 1
+        dbb = MockCommentDB()
+        validator = MockCommentValidator()
+        commentor = Commentor(dbb, validator)
+
+        cid = commentor.create_comment(post_id=1, user_id=uid, content=MSG)
+
+        comment = commentor.delete_comment(user_id=uid, comment_id=cid)
+
+        assert comment.comment_id == cid

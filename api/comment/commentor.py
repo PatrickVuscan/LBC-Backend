@@ -25,7 +25,12 @@ class Commentor:
         self._validator.validate_post(post_id)
         return self.comment_db.get_n_comments(post_id=post_id, n=n, offset=offset)
 
-    def update_comment(self, comment_id: int, content: str):
+    def update_comment(self, comment_id: int, user_id: int, content: str):
         """Update Comment with id `comment_id`."""
-        self._validator.validate_comment(comment_id)
+        self._validator.validate_user_authorization(user_id, comment_id)
         return self.comment_db.update_comment(comment_id, content)
+
+    def delete_comment(self, comment_id: int, user_id: int):
+        """Delete Comment with id `comment_id`."""
+        self._validator.validate_user_authorization(user_id, comment_id)
+        return self.comment_db.delete_comment(comment_id)
