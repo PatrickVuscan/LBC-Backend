@@ -10,9 +10,25 @@ requests = TestClient(app)
 class TestPosts(TestCase):
     """Test all post routes."""
 
+    def test_create_post(self):
+
+        request_body = {
+            "username": "Test1",
+            "anonymous": False,
+            "topic": "Test_Post_Topic",
+            "post_header": "Test_Post_Header",
+            "post_body": "The Sky is Blue.",
+        }
+
+        res = requests.post("/posts", json=request_body)
+        post = res.json()
+
+        assert res.status_code == 200
+        assert post["post_body"] == "The Sky is Blue."
+
     def test_get_all_posts(self):
         request_body1 = {
-            "username": "Test1",
+            "username": "Test2",
             "anonymous": False,
             "topic": "Test_Post_Topic",
             "post_header": "Test_Post_Header1",
@@ -20,7 +36,7 @@ class TestPosts(TestCase):
         }
 
         request_body2 = {
-            "username": "Test2",
+            "username": "Test3",
             "anonymous": False,
             "topic": "Test_Post_Topic",
             "post_header": "Test_Post_Header2",
@@ -49,7 +65,7 @@ class TestPosts(TestCase):
         post = res.json()
 
         assert post["post_id"] == pid
-        assert post["username"] == "Test_Post_Username"
+        assert post["username"] == "Test1"
         assert post["anonymous"] is False
         assert post["date_time"] is not None
         assert post["topic"] == "Test_Post_Topic"
@@ -57,50 +73,6 @@ class TestPosts(TestCase):
         assert post["post_body"] == "The Sky is Blue."
 
         print("Test Get Single Post Passed")
-
-    def test_get_10_posts(self):
-
-        request_body1 = {
-            "username": "Test1",
-            "anonymous": False,
-            "topic": "Test_Post_Topic",
-            "post_header": "Test_Post_Header",
-            "post_body": "The Sky is Blue.",
-        }
-
-        request_body2 = {
-            "username": "Test2",
-            "anonymous": False,
-            "topic": "Test_Post_Topic",
-            "post_header": "Test_Post_Header",
-            "post_body": "The Sky is Blue.",
-        }
-
-        requests.post("/posts", json=request_body1)
-        requests.post("/posts", json=request_body2)
-
-        res = requests.get("/posts/recent/10")
-        post = res.json()
-
-        assert res.status_code == 200
-
-        print(post)
-
-    def test_create_post(self):
-
-        request_body = {
-            "username": "Test_Post_Username",
-            "anonymous": False,
-            "topic": "Test_Post_Topic",
-            "post_header": "Test_Post_Header",
-            "post_body": "The Sky is Blue.",
-        }
-
-        res = requests.post("/posts", json=request_body)
-        post = res.json()
-
-        assert res.status_code == 200
-        assert post["post_body"] == "The Sky is Blue."
 
     def test_update_post(self):
         """To test updating a post we first need to get the post's data then we update
@@ -142,6 +114,54 @@ class TestPosts(TestCase):
         assert response_body_from_get["post_header"] == post_with_id_1["post_header"]
         assert response_body_from_get["post_body"] == "Some New Post Body"
 
+    def test_get_10_posts(self):
+
+        request_body1 = {
+            "username": "Test3",
+            "anonymous": False,
+            "topic": "Test_Post_Topic",
+            "post_header": "Test_Post_Header",
+            "post_body": "The Sky is Blue.",
+        }
+
+        request_body2 = {
+            "username": "Test4",
+            "anonymous": False,
+            "topic": "Test_Post_Topic",
+            "post_header": "Test_Post_Header",
+            "post_body": "The Sky is Blue.",
+        }
+
+        requests.post("/posts", json=request_body1)
+        requests.post("/posts", json=request_body2)
+
+        res = requests.get("/posts/recent/2")
+        post = res.json()
+
+        expected = requests.get("/posts/1")
+        expected_post = expected.json()
+
+        assert res.status_code == 200
+        assert post["username"] == expected_post["username"]
+
+    def test_delete_post(self):
+
+        res = requests.get("/posts")
+        posts = res.json()
+        post = posts[-1]
+        post_id1 = post["post_id"]
+
+        requests.delete("/posts/{postid}")
+
+        res = requests.get("/posts")
+        posts = res.json()
+        post = posts[-1]
+        post_id2 = post["post_id"]
+
+        assert res.status_code == 200
+
+        assert post_id1 > post_id2
+
 
 if __name__ == "__main__":
     p = TestPosts()
@@ -150,3 +170,4 @@ if __name__ == "__main__":
     p.test_get_single_post()
     p.test_update_post()
     p.test_get_10_posts()
+    p.test_delete_post()
