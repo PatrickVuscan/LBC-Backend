@@ -29,3 +29,12 @@ class CommentValidatorDB(CommentValidatorInterface):
 
         if db_comment is None:
             raise ValueError(f"Comment with id {comment_id} does not exist!")
+
+    def validate_user_authorization(self, user_id: int, comment_id: int):
+        self.validate_user(user_id)
+        self.validate_comment(comment_id)
+
+        db_comment = self.orm.query(CommentModel).filter(CommentModel.comment_id == comment_id).first()
+
+        if db_comment.user_id != user_id:
+            raise PermissionError("Access Denied: You are not allowed to modify this comment.")

@@ -19,3 +19,8 @@ class CommentValidatorInterface(metaclass=abc.ABCMeta):
     def validate_comment(self, comment_id: int):
         """Validate Comment with `comment_id`"""
         raise NotImplementedError
+
+    @abc.abstractmethod
+    def validate_user_authorization(self, user_id: int, comment_id: int):
+        """Check user authorization with respect to Comment with `comment_id`."""
+        raise NotImplementedError
