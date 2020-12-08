@@ -4,7 +4,7 @@ from typing import List
 from fastapi import APIRouter
 from fastapi.params import Depends
 
-from api.schema.schemas import CommentInDB, CreateComment
+from api.schema.schemas import CommentInDB, CreateComment, RequestCommentUpdate, RequestDeleteComment
 from api.comment.commentor import Commentor
 from api.comment.comment_db_interface import CommentDBInterface
 from api.database.comment_db import CommentDB
@@ -70,3 +70,27 @@ def read_n_comments(
 
     commentor = Commentor(dbb, validator)
     return commentor.view_n_comments(post_id=pid, n=limit, offset=offset)
+
+
+@ROUTER.put("/comments/{cid}")
+def update_comment(
+    cid: int,
+    update_request: RequestCommentUpdate,
+    dbb: CommentDBInterface = Depends(get_comment_db),  # type: ignore
+    validator: CommentValidatorInterface = Depends(get_comment_validator),  # type: ignore
+):
+    """Update Comment if authorized."""
+    commentor = Commentor(dbb, validator)
+    commentor.update_comment(cid, update_request.user_id, update_request.content)
+
+
+@ROUTER.delete("/comments/{cid}")
+def delete_comment(
+    cid: int,
+    delete_request: RequestDeleteComment,
+    dbb: CommentDBInterface = Depends(get_comment_db),  # type: ignore
+    validator: CommentValidatorInterface = Depends(get_comment_validator),  # type: ignore
+):
+    """Update Comment if authorized."""
+    commentor = Commentor(dbb, validator)
+    commentor.delete_comment(cid, delete_request.user_id)

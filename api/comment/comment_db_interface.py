@@ -25,3 +25,8 @@ class CommentDBInterface(metaclass=abc.ABCMeta):
     def update_comment(self, comment_id: int, content: str):
         """Update a comment."""
         raise NotImplementedError
+
+    @abc.abstractmethod
+    def delete_comment(self, comment_id: int):
+        """Delete a comment."""
+        raise NotImplementedError
