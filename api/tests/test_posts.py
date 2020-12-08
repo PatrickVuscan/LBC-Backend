@@ -161,7 +161,8 @@ class TestPosts(TestCase):
         post1 = posts1[-1]
         post_id1 = post1["post_id"]
 
-        requests.delete("/posts/{postid}")
+        res = requests.delete(f"/posts/{post_id1}")
+        assert res.status_code == 200
 
         res2 = requests.get("/posts")
         posts2 = res2.json()
