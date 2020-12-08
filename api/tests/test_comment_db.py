@@ -47,3 +47,45 @@ class TestCommentDB(TestCase):
         assert comment.content == content
         assert comment.post_id == post_id
         assert comment.user_id == user_id
+
+    def test_view_n_comments(self):
+        post_id = 1
+        user_id = 1
+        content1 = "Hello 1"
+        content2 = "Hello 2"
+        content3 = "Testing comments bruh."
+
+        cid1 = self.dbb.post_comment(post_id, user_id, content1)
+        cid2 = self.dbb.post_comment(post_id, user_id, content2)
+        cid3 = self.dbb.post_comment(post_id, user_id, content3)
+
+        comments = self.dbb.get_n_comments(post_id, n=3)
+
+        assert len(comments) == 3
+        assert comments[0].comment_id == cid3
+        assert comments[1].comment_id == cid2
+        assert comments[2].comment_id == cid1
+
+    def test_view_n_comments_starting_from_offset(self):
+        post_id = 1
+        user_id = 1
+        content1 = "Hello 1"
+        content2 = "Hello 2"
+        content3 = "Testing comments bruh."
+        content4 = "Testing comments bruh!"
+        content5 = "Testing comments bruh!!"
+        content6 = "Testing comments bruh!!!"
+
+        cid1 = self.dbb.post_comment(post_id, user_id, content1)
+        cid2 = self.dbb.post_comment(post_id, user_id, content2)
+        cid3 = self.dbb.post_comment(post_id, user_id, content3)
+        self.dbb.post_comment(post_id, user_id, content4)
+        self.dbb.post_comment(post_id, user_id, content5)
+        self.dbb.post_comment(post_id, user_id, content6)
+
+        comments = self.dbb.get_n_comments(post_id, n=3, offset=3)
+
+        assert len(comments) == 3
+        assert comments[0].comment_id == cid3
+        assert comments[1].comment_id == cid2
+        assert comments[2].comment_id == cid1

@@ -45,16 +45,16 @@ class TestPosts(TestCase):
 
         res1 = requests.post("/posts", json=request_body1)
         res2 = requests.post("/posts", json=request_body2)
-        res1 = res1.json()
-        res2 = res2.json()
+        post_id1 = res1.json()
+        post_id2 = res2.json()
 
         res = requests.get("/posts")
 
         assert res.status_code == 200
         posts = res.json()
 
-        assert posts[-1]["username"] == res2["username"]
-        assert posts[-2]["username"] == res1["username"]
+        assert posts[-1]["post_id"] == post_id2
+        assert posts[-2]["post_id"] == post_id1
 
     def test_get_single_post(self):
 

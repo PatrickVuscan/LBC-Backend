@@ -10,7 +10,8 @@ class User(Base):
 
     __tablename__ = "USERS"
 
-    username = Column(String, unique=True, primary_key=True)
+    username = Column(String, unique=True)
+    user_id = Column(Integer, primary_key=True, unique=True, index=True, autoincrement=True)
     password = Column(String, nullable=False)  # Not enforcing char limit because hash coded data may be long
 
     name = Column(String)

@@ -1,10 +1,11 @@
 """Module contains database logic for comment model."""
+
 from sqlalchemy.orm import sessionmaker
 from api.database.db_initialize import ENGINE
 
 from api.model.table_models import Comment as CommentModel
-from api.posts.comment_db_interface import CommentDBInterface
-from api.posts.comment import Comment
+from api.comment.comment_db_interface import CommentDBInterface
+from api.comment.comment import Comment
 
 
 class CommentDB(CommentDBInterface):
@@ -28,3 +29,25 @@ class CommentDB(CommentDBInterface):
         if db_comment is None:
             raise ValueError(f"No such comment with id {comment_id} in db.")
         return Comment(db_comment.comment_id, db_comment.post_id, db_comment.user_id, db_comment.content)
+
+    def get_n_comments(self, post_id: int, n: int, offset=0):
+        db_comments = (
+            self.orm.query(CommentModel)
+            .filter(CommentModel.post_id == post_id)
+            .order_by(CommentModel.comment_id.desc())
+            .offset(offset)
+            .limit(n)
+            .all()
+        )
+
+        if len(db_comments) == 0:
+            raise ValueError(f"No comments for post with id {post_id} in db.")
+
+        comments = []
+        for db_comment in db_comments:
+            comments.append(Comment(db_comment.comment_id, db_comment.post_id, db_comment.user_id, db_comment.content))
+
+        return comments
+
+    def update_comment(self, comment_id: int, content: str):
+        """TODO: To be implemented."""

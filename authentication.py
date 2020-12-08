@@ -26,7 +26,7 @@ def get_password_hash(password):
 
 
 def get_user(db, username: str):
-    user = db.query(User).filter(User.username==username).first()
+    user = db.query(User).filter(User.username == username).first()
     return user
 
 
@@ -49,6 +49,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
+
 def create_user(db, user):
     new_user = User(username=user.username, password=get_password_hash(user.password))
 
@@ -60,4 +61,3 @@ def create_user(db, user):
         return new_user
     else:
         return {"message": "Username already exists"}
-
