@@ -20,11 +20,18 @@ class TestPosts(TestCase):
             "post_body": "The Sky is Blue.",
         }
 
-        res = requests.post("/posts", json=request_body)
-        post = res.json()
+        res1 = requests.post("/posts", json=request_body)
+        post_id = res1.json()
 
-        assert res.status_code == 200
-        assert post["post_body"] == "The Sky is Blue."
+        res2 = requests.get("/posts")
+        posts = res2.json()
+        post = posts[-1]
+        expected_post_id = post["post_id"]
+
+        assert res1.status_code == 200
+        assert res2.status_code == 200
+
+        assert post_id == expected_post_id
 
     def test_get_all_posts(self):
         request_body1 = {
@@ -58,21 +65,24 @@ class TestPosts(TestCase):
 
     def test_get_single_post(self):
 
-        pid = 1
-        res = requests.get(f"/posts/{pid}")
+        res1 = requests.get("/posts")
+        posts = res1.json()
+        expected_post = posts[-1]
+        post_id = expected_post["post_id"]
 
-        assert res.status_code == 200
-        post = res.json()
+        res2 = requests.get(f"/posts/{post_id}")
 
-        assert post["post_id"] == pid
-        assert post["username"] == "Test1"
-        assert post["anonymous"] is False
+        assert res1.status_code == 200
+        assert res2.status_code == 200
+        post = res2.json()
+
+        assert post["post_id"] == expected_post["post_id"]
+        assert post["username"] == expected_post["username"]
+        assert post["anonymous"] is expected_post["anonymous"]
         assert post["date_time"] is not None
-        assert post["topic"] == "Test_Post_Topic"
-        assert post["post_header"] == "Test_Post_Header"
-        assert post["post_body"] == "The Sky is Blue."
-
-        print("Test Get Single Post Passed")
+        assert post["topic"] == expected_post["topic"]
+        assert post["post_header"] == expected_post["post_header"]
+        assert post["post_body"] == expected_post["post_body"]
 
     def test_update_post(self):
         """To test updating a post we first need to get the post's data then we update
@@ -142,23 +152,24 @@ class TestPosts(TestCase):
         expected_post = expected.json()
 
         assert res.status_code == 200
-        assert post["username"] == expected_post["username"]
+        assert post[0]["username"] == expected_post["username"]
 
     def test_delete_post(self):
 
-        res = requests.get("/posts")
-        posts = res.json()
-        post = posts[-1]
-        post_id1 = post["post_id"]
+        res1 = requests.get("/posts")
+        posts1 = res1.json()
+        post1 = posts1[-1]
+        post_id1 = post1["post_id"]
 
         requests.delete("/posts/{postid}")
 
-        res = requests.get("/posts")
-        posts = res.json()
-        post = posts[-1]
-        post_id2 = post["post_id"]
+        res2 = requests.get("/posts")
+        posts2 = res2.json()
+        post2 = posts2[-1]
+        post_id2 = post2["post_id"]
 
-        assert res.status_code == 200
+        assert res1.status_code == 200
+        assert res2.status_code == 200
 
         assert post_id1 > post_id2
 

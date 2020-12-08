@@ -94,5 +94,6 @@ def update_post(pid: int, request_body: UpdatePost, dbb: Session = Depends(get_d
 def delete_post(pid: int, dbb: Session = Depends(get_db)):
     """Delete a post"""
     record_obj = dbb.query(UserPosts).filter(UserPosts.post_id == pid).first()
+
     dbb.delete(record_obj)
     dbb.commit()
