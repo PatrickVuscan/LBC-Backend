@@ -15,7 +15,7 @@ class TestPosts(TestCase):
             "username": "Test1",
             "anonymous": False,
             "topic": "Test_Post_Topic",
-            "post_header": "Test_Post_Header",
+            "post_header": "Test_Post_Header1",
             "post_body": "The Sky is Blue.",
         }
 
@@ -23,7 +23,7 @@ class TestPosts(TestCase):
             "username": "Test2",
             "anonymous": False,
             "topic": "Test_Post_Topic",
-            "post_header": "Test_Post_Header",
+            "post_header": "Test_Post_Header2",
             "post_body": "The Sky is Blue.",
         }
 
@@ -39,8 +39,6 @@ class TestPosts(TestCase):
 
         assert posts[-1]["username"] == res2["username"]
         assert posts[-2]["username"] == res1["username"]
-
-        print("Test Get All Posts Passed")
 
     def test_get_single_post(self):
 
@@ -62,14 +60,31 @@ class TestPosts(TestCase):
 
     def test_get_10_posts(self):
 
-        res = requests.get(f"/posts/recent/11")
+        request_body1 = {
+            "username": "Test1",
+            "anonymous": False,
+            "topic": "Test_Post_Topic",
+            "post_header": "Test_Post_Header",
+            "post_body": "The Sky is Blue.",
+        }
 
-        assert res.status_code == 200
+        request_body2 = {
+            "username": "Test2",
+            "anonymous": False,
+            "topic": "Test_Post_Topic",
+            "post_header": "Test_Post_Header",
+            "post_body": "The Sky is Blue.",
+        }
+
+        requests.post("/posts", json=request_body1)
+        requests.post("/posts", json=request_body2)
+
+        res = requests.get("/posts/recent/10")
         post = res.json()
 
-        assert len(post) == 10
+        assert res.status_code == 200
 
-        print("Test Get 10 Posts Passed")
+        print(post)
 
     def test_create_post(self):
 
@@ -86,8 +101,6 @@ class TestPosts(TestCase):
 
         assert res.status_code == 200
         assert post["post_body"] == "The Sky is Blue."
-
-        print("Test Create Post Passed")
 
     def test_update_post(self):
         """To test updating a post we first need to get the post's data then we update
@@ -129,13 +142,11 @@ class TestPosts(TestCase):
         assert response_body_from_get["post_header"] == post_with_id_1["post_header"]
         assert response_body_from_get["post_body"] == "Some New Post Body"
 
-        print("Test Update Post")
-
 
 if __name__ == "__main__":
     p = TestPosts()
-    p.test_get_all_posts()
     p.test_create_post()
+    p.test_get_all_posts()
     p.test_get_single_post()
     p.test_update_post()
     p.test_get_10_posts()

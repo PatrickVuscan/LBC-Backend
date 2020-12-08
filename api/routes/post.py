@@ -31,6 +31,13 @@ def get_ten_recent_posts(cursor: int, dbb: Session = Depends(get_db)):
     return posts
 
 
+@ROUTER.get("/posts/user/{username}")
+def get_posts_by_user(username: str, dbb: Session = Depends(get_db)):
+    """Get the ten most recent posts"""
+    posts = dbb.query(UserPosts).filter(UserPosts.username == username).all()
+    return posts
+
+
 @ROUTER.get("/posts/{pid}")
 def get_single_post(pid: int, dbb: Session = Depends(get_db)):
     """Get a single post"""
@@ -80,3 +87,11 @@ def update_post(pid: int, request_body: UpdatePost, dbb: Session = Depends(get_d
     dbb.commit()
 
     return request_body
+
+
+@ROUTER.delete("/posts/{pid}")
+def delete_post(pid: int, dbb: Session = Depends(get_db)):
+    """Delete a post"""
+    record_obj = dbb.query(UserPosts).filter(UserPosts.post_id == pid).first()
+    dbb.delete(record_obj)
+    dbb.commit()
