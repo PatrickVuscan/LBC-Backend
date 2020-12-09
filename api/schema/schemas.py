@@ -40,6 +40,12 @@ class RequestDeleteComment(BaseModel):
     user_id: int
 
 
+class RequestDeletePost(BaseModel):
+    """Request body validation for deleting posts."""
+
+    username: str
+
+
 class UpdatePost(BaseModel):
     """ Data Validation for updating post """
 

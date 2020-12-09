@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import sessionmaker, Session
 from api.database.db_initialize import ENGINE
 from api.model.table_models import UserPosts
-from api.schema.schemas import CreatePost, UpdatePost
+from api.schema.schemas import CreatePost, RequestDeletePost, UpdatePost
 
 
 ROUTER = APIRouter()
@@ -21,6 +21,20 @@ def get_db():
 def get_all_posts(dbb: Session = Depends(get_db)):
     """Get all posts"""
     posts = dbb.query(UserPosts).all()
+    return posts
+
+
+@ROUTER.get("/posts/recent/{cursor}")
+def get_ten_recent_posts(cursor: int, dbb: Session = Depends(get_db)):
+    """Get the ten most recent posts"""
+    posts = dbb.query(UserPosts).filter(UserPosts.post_id < cursor).limit(10).all()
+    return posts
+
+
+@ROUTER.get("/posts/user/{username}")
+def get_posts_by_user(username: str, dbb: Session = Depends(get_db)):
+    """Get the ten most recent posts"""
+    posts = dbb.query(UserPosts).filter(UserPosts.username == username).all()
     return posts
 
 
@@ -74,3 +88,14 @@ def update_post(pid: int, request_body: UpdatePost, dbb: Session = Depends(get_d
     dbb.commit()
 
     return request_body
+
+
+@ROUTER.delete("/posts/{pid}")
+def delete_post(pid: int, delete_request: RequestDeletePost, dbb: Session = Depends(get_db)):
+    """Delete a post if authorized."""
+
+    record_obj = dbb.query(UserPosts).filter(UserPosts.post_id == pid).first()
+
+    if record_obj.username == delete_request.username:
+        dbb.delete(record_obj)
+        dbb.commit()
