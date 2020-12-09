@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import sessionmaker, Session
 from api.database.db_initialize import ENGINE
 from api.model.table_models import UserPosts
-from api.schema.schemas import CreatePost, UpdatePost
+from api.schema.schemas import CreatePost, RequestDeletePost, UpdatePost
 
 
 ROUTER = APIRouter()
@@ -91,9 +91,11 @@ def update_post(pid: int, request_body: UpdatePost, dbb: Session = Depends(get_d
 
 
 @ROUTER.delete("/posts/{pid}")
-def delete_post(pid: int, dbb: Session = Depends(get_db)):
-    """Delete a post"""
+def delete_post(pid: int, delete_request: RequestDeletePost, dbb: Session = Depends(get_db)):
+    """Delete a post if authorized."""
+
     record_obj = dbb.query(UserPosts).filter(UserPosts.post_id == pid).first()
 
-    dbb.delete(record_obj)
-    dbb.commit()
+    if record_obj.username == delete_request.username:
+        dbb.delete(record_obj)
+        dbb.commit()

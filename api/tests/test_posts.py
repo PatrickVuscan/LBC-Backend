@@ -154,14 +154,14 @@ class TestPosts(TestCase):
         assert res.status_code == 200
         assert post[0]["username"] == expected_post["username"]
 
-    def test_delete_post(self):
+    def test_authorized_delete_post(self):
 
         res1 = requests.get("/posts")
         posts1 = res1.json()
         post1 = posts1[-1]
         post_id1 = post1["post_id"]
 
-        res = requests.delete(f"/posts/{post_id1}")
+        res = requests.delete(f"/posts/{post_id1}", json={"username": post1["username"]})
         assert res.status_code == 200
 
         res2 = requests.get("/posts")
@@ -174,6 +174,26 @@ class TestPosts(TestCase):
 
         assert post_id1 > post_id2
 
+    def test_unauthorized_delete_post(self):
+
+        res1 = requests.get("/posts")
+        posts1 = res1.json()
+        post1 = posts1[-1]
+        post_id1 = post1["post_id"]
+
+        res = requests.delete(f"/posts/{post_id1}", json={"username": "fake_username"})
+        assert res.status_code == 200
+
+        res2 = requests.get("/posts")
+        posts2 = res2.json()
+        post2 = posts2[-1]
+        post_id2 = post2["post_id"]
+
+        assert res1.status_code == 200
+        assert res2.status_code == 200
+
+        assert post_id1 == post_id2
+
 
 if __name__ == "__main__":
     p = TestPosts()
@@ -182,4 +202,5 @@ if __name__ == "__main__":
     p.test_get_single_post()
     p.test_update_post()
     p.test_get_10_posts()
-    p.test_delete_post()
+    p.test_authorized_delete_post()
+    p.test_unauthorized_delete_post()
