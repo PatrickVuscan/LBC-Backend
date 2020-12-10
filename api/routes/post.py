@@ -68,6 +68,7 @@ def create_post(request_body: CreatePost, dbb: Session = Depends(get_db)):
     post_data = {
         "username": request_body.username,
         "topic": request_body.topic,
+        "anonymous": request_body.anonymous,
         "date_time": datetime.now(),
         "post_header": request_body.post_header,
         "post_body": request_body.post_body,
