@@ -40,9 +40,6 @@ class CommentDB(CommentDBInterface):
             .all()
         )
 
-        if len(db_comments) == 0:
-            raise ValueError(f"No comments for post with id {post_id} in db.")
-
         comments = []
         for db_comment in db_comments:
             comments.append(Comment(db_comment.comment_id, db_comment.post_id, db_comment.user_id, db_comment.content))
