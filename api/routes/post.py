@@ -27,7 +27,13 @@ def get_all_posts(dbb: Session = Depends(get_db)):
 @ROUTER.get("/posts/recent/{cursor}")
 def get_ten_recent_posts(cursor: int, dbb: Session = Depends(get_db)):
     """Get the ten most recent posts"""
-    posts = dbb.query(UserPosts).filter(UserPosts.post_id < cursor).limit(10).all()
+    if cursor == 0:
+        posts = dbb.query(UserPosts).order_by(UserPosts.post_id.desc()).limit(10).all()
+    else:
+        posts = (
+            dbb.query(UserPosts).filter(UserPosts.post_id < cursor).order_by(UserPosts.post_id.desc()).limit(10).all()
+        )
+
     return posts
 
 
