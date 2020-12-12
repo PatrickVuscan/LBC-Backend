@@ -14,7 +14,7 @@ import authentication
 
 ROUTER = APIRouter()
 
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 86400
 OAUTH2_SCHEME = OAuth2PasswordBearer(tokenUrl="token")
 
 
