@@ -1,0 +1,39 @@
+name: Python Continuous Integration for backend API.
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  test_push_request:
+    runs-on: ubuntu-20.04
+    env:
+      PYTHONPATH: .
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          python-version: 3.8
+      - name: Setup Conda Environment
+        shell: bash -l {0}
+        run: |
+          conda init bash
+          conda env create
+          conda activate fast-api
+          pip-sync requirements.txt requirements-dev.txt
+      - name: Run API Tests
+        shell: bash -l {0}
+        run: |
+          conda activate fast-api
+          ./scripts/run_tests.sh
+      - name: Run Linter
+        shell: bash -l {0}
+        run: |
+          conda activate fast-api
+          ./scripts/lint.sh
